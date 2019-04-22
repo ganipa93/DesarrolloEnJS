@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Ejemplo de Calendario</title>
+ 
+  <style>
+    #cal, #year, #month, #prev, #next, .day{
+       border-style: double;
+       border-width 1px;
+    }
+ 
+    td {
+       text-align: center;
+    }
+  </style>
+</head>
+ 
+<body onload="getCal()">
+  <H1>Calendario</H1>
+ 
+<!-- en HTML se pintan las cabeceras -->
+  <table id="cal">
+    <tr>
+      <td id="year" colspan="7"></td>
+    </tr>
+    <tr>
+      <td id="prev" onclick="prevMonth();"><</td>
+      <td id="month" colspan="5"></td>
+      <td id="next" onclick='nextMonth();'>></td>
+    </tr>
+    <tr>
+      <td class="day">L</td>
+      <td class="day">M</td>
+      <td class="day">X</td>
+      <td class="day">J</td>
+      <td class="day">V</td>
+      <td class="day">S</td>
+      <td class="day">D</td>
+    </tr>
+    <tr><td colspan="7"><table  id="days"></table></td></tr>
+  </table>
+ 
+  <script>
+    // Definición de variables globales
+    var fecha = new Date();
+    var anyo  = fecha.getFullYear();
+    var mes   = fecha.getMonth();
+ 
+    var listaMeses = new Array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+ 
+    // Función que genera las lineas del calendario.
+    function getCal() {
+      var tablaDias = document.getElementById ("days");
+ 
+      fecha.setFullYear(anyo);
+      fecha.setMonth(mes);
+ 
+      var celdaAnyo = document.getElementById ("year");
+      celdaAnyo.innerHTML=anyo;
+ 
+      var celdaMes = document.getElementById ("month");
+      celdaMes.innerHTML=listaMeses[mes];
+ 
+      // El primer dia (0) para getDay es domingo, no lunes
+      var diaSemana = null;
+      var diaMes    = 1;
+ 
+      fecha.setDate(diaMes);
+ 
+      while (mes === fecha.getMonth()) {
+        var fila = document.createElement("tr");
+ 
+        for (var i = 1; i < 8; i+=1) {
+          var celda = document.createElement("td");
+          diaSemana = fecha.getDay();
+ 
+          if (diaSemana === 0) {
+            diaSemana = 7;
+          }
+ 
+          if (mes === fecha.getMonth()) {
+            if (i === diaSemana) {
+              var texto = document.createTextNode(diaMes);
+              diaMes++;
+              fecha.setDate(diaMes);
+            } else {
+              var texto = document.createTextNode(" ");
+            }
+          } else {
+            var texto = document.createTextNode(" ");
+          }
+ 
+          celda.appendChild(texto);
+          fila.appendChild(celda);
+        }
+ 
+        tablaDias.appendChild(fila);
+      }
+    }
+ 
+    function prevMonth() {
+      document.getElementById ("days").innerHTML= "";
+ 
+      if (mes === 0) {
+        mes = 11;
+        anyo--;
+      } else {
+        mes--;
+      }
+ 
+      getCal();
+    }
+ 
+    function nextMonth() {
+      document.getElementById ("days").innerHTML= "";
+ 
+      if (mes === 11) {
+        mes = 0;
+        anyo++;
+      } else {
+        mes++;
+      }
+ 
+      getCal();
+    }
+  </script>
+</body>
+</html>
